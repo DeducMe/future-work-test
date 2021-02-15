@@ -1,0 +1,15 @@
+.main-container{
+    display: flex;
+
+    max-width: 1440px;
+    margin: 0 auto;
+}
+
+tr td{
+    overflow: hidden;
+}
+
+.underline{
+    border-bottom: 1px solid #000;
+}
+

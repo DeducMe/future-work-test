@@ -1,0 +1,28 @@
+const tableDataUrl =  'http://www.filltext.com'
+const tableDataInitialOptions = '&id={number|1000}&firstName={firstName}&delay=1&lastName={lastName}&email={email}&phone={phone|(xxx)xxx-xx-xx}&address={addressObject}&description={lorem|32}'
+
+function getDataFetchSucces(tableData){
+    return{
+        type:'SET_TABLE_DATA',
+        payload:tableData
+    }
+}
+
+export const getTableData = (rowsAmount) => (dispatch) => {
+    return fetch(tableDataUrl + '/?rows=' + rowsAmount + tableDataInitialOptions,{
+        method: 'GET',
+        headers:{
+        'Content-Type': 'application/json'
+      }
+    })  
+    .then(response => {
+        let a = response.json()
+        console.log(a)
+        return a
+    })
+    .then(data => {
+        console.log(data)
+        return dispatch(getDataFetchSucces(data))
+    })
+}
+

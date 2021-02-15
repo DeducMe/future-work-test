@@ -1,0 +1,65 @@
+.visually-hidden{
+    position: absolute !important;
+
+    overflow: hidden;
+    clip: rect(1px 1px 1px 1px);
+    clip: rect(1px, 1px, 1px, 1px);/*IE6,IE7*/
+
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+
+    border: 0 !important;
+}
+
+h1,
+h2,
+h3,
+h4{
+    margin: 0;
+}
+
+*{
+    font-family: 'Source Code Pro';
+    font-size: calc(12px + .4vw);
+    font-weight: 400;
+    line-height: 1.4;
+
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+
+    color: #000;
+    outline: none;
+    background-color: #fff3d2;
+}
+
+body{
+    overflow-x: hidden;
+}
+
+a{
+    position: relative;
+
+    cursor: pointer;
+    text-decoration: none;
+}
+
+button{
+    cursor: pointer;
+
+    border: none;
+    background: none;
+}
+
+ul{
+    list-style: none;
+}
+
+input,
+textarea{
+    color: inherit;
+    border: none;
+    background-color: inherit;
+}
+

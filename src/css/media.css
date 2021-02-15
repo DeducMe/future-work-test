@@ -1,0 +1,30 @@
+@media (max-width : 1440px){
+    .main-container{
+        padding: 10px;
+    }
+
+    .search-block{
+        flex-direction: column;
+    }
+
+    .close-btn,
+    .search-btn{
+        margin-top: 15px;
+    }
+}
+
+@media (max-width : 768px){
+    .main-container{
+        flex-direction: column;
+    }
+
+    .users-table,
+    .side-block{
+        width: 100%;
+    }
+
+    td,
+    th{
+        word-break: break-all;
+    }
+}
