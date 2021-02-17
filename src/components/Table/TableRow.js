@@ -1,6 +1,5 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { connect } from 'react-redux'
-import './table.css'
 
 function TableRow({data, index, selectedId, onSelectElement}) {
     
@@ -13,6 +12,7 @@ function TableRow({data, index, selectedId, onSelectElement}) {
             {Object.keys(data).map((item, index) => {
                 if (item !== 'address' && item !== 'description')
                     return <td className={"td-" + item} key={index} onClick={selectElement.bind(this, data)}>{data[item]}</td>
+                return null
             })}  
         </tr>
     )

@@ -10,8 +10,9 @@ export const loaderDeactivate = () => (dispatch) => {
     })
 }
 
-export const setMaxPages = () => (dispatch) => {
+export const setMaxPages = (dataName = 'data') => (dispatch) => {
     return dispatch({
-        type:'SET_MAX_PAGES'
+        type:'SET_MAX_PAGES',
+        payload: dataName
     })
 }

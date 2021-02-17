@@ -1,9 +1,9 @@
 import { connect } from 'react-redux'
 import './loader.css'
 
-import React, { Component } from 'react'
+import React from 'react'
 
-const Loader = ({}) => {
+const Loader = () => {
     return (
         <div className="loader">
             <div className="lds-ring">

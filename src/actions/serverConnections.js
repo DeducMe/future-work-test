@@ -15,14 +15,7 @@ export const getTableData = (rowsAmount) => (dispatch) => {
         'Content-Type': 'application/json'
       }
     })  
-    .then(response => {
-        let a = response.json()
-        console.log(a)
-        return a
-    })
-    .then(data => {
-        console.log(data)
-        return dispatch(getDataFetchSucces(data))
-    })
+    .then(response => response.json())
+    .then(data => dispatch(getDataFetchSucces(data)))
 }
 

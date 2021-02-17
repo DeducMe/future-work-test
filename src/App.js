@@ -6,6 +6,7 @@ import './css/normalize.css';
 import './fonts/stylesheet.css';
 import './css/media.css';
 
+
 export default class App extends Component {
   render() {
     return (

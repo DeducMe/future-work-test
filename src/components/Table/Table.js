@@ -1,41 +1,82 @@
-import React, {useState, useEffect, Component} from 'react';
-import TableRow from './TableRow'
-import Loader from './../Loader/Loader'
-import { connect } from 'react-redux'
-import {getTableData} from '../../actions/serverConnections'
-import {loaderActivate, loaderDeactivate, setMaxPages} from '../../actions/application'
-import clearIcon from '../../img/close.svg'
-import searchIcon from '../../img/search.svg'
+import React, {Component} from 'react';
+import TableRow from './TableRow';
+import Loader from './../Loader/Loader';
+import { connect } from 'react-redux';
+import {getTableData} from '../../actions/serverConnections';
+import {loaderActivate, loaderDeactivate, setMaxPages} from '../../actions/application';
+import clearIcon from '../../img/close.svg';
+import searchIcon from '../../img/search.svg';
+import './table.css';
 
 
 class Table extends Component{
     getData = (rowsAmount) => {
-      this.props.onCurPageNullify()
-      this.props.onSelectedElementNullify()
-
-      this.props.onGetTableData(rowsAmount)
+      this.props.onCurPageNullify();
+      this.props.onSelectedElementNullify();
+      this.props.onSearchDataNullify();
+      this.props.onGetTableData(rowsAmount);
     }
 
     searchValue = () =>{
       const final = this.props.tableData.filter((item)=>{
-          console.log()
           return Object.values(item).includes(this.props.tableState.searchValue);
       })
-      this.props.onChangeFilteredData(final)
+      this.props.onChangeFilteredData(final);
+      this.props.onSetMaxPages('filteredData');
+      this.props.onCurPageNullify();
     }
 
     changeSearchInput = (e) =>{
-      this.props.onChangeSearchInput(e.target.value)
+      this.props.onChangeSearchInput(e.target.value);
     }
 
     nullifySearchValue = () =>{
-      this.props.onSearchDataNullify()
+      this.props.onSetMaxPages('filteredData');
+      this.props.onCurPageNullify();
+      this.props.onSearchDataNullify();
+    }
+
+    validateEmail(email) {
+      const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      return re.test(String(email).toLowerCase());
+    }
+
+    validatePhone(phone) {
+      const re = /\(?([0-9]{3})\)?([ .-]?)([0-9]{3})\2([0-9]{4})/;
+      return re.test(String(phone).toLowerCase());
+    }
+
+    addElementFormSubmit = (e) =>{
+      e.preventDefault();
+
+      this.props.onFormErorrInputNullify();
+
+      if (this.checkFormInputValue(this.props.tableState.dataForm)){
+        this.props.onAddFormInput();
+      }
+      else {
+        this.props.onFormErorrInput();
+      }
+    }
+
+    checkFormInputValue = (form) => {
+      if (this.validateEmail(form.email) && this.validatePhone(form.phone)){
+        return true;
+      }
+      else return false;
+    }
+
+    changeFormInputValue = (e) => {
+      const inputName = e.target.name;
+      const inputValue = e.target.value;
+      
+      this.props.onChangeFormInput(inputValue, inputName);
     }
 
     sortColumn = (columnName) => {
-      let newData = this.props.tableData.slice()
-      this.props.onColumnFilterStateToggle(columnName)
-      this.props.onSelectedElementNullify()
+      let newData = this.props.tableData.slice();
+      this.props.onColumnFilterStateToggle(columnName);
+      this.props.onSelectedElementNullify();
       
       if (this.props.columnFilterState[columnName] === 'increase'){
         newData.sort((a, b) => {
@@ -59,14 +100,14 @@ class Table extends Component{
           return 0;
         });
       }
-      this.props.onUpdateTableData(newData)
+      this.props.onUpdateTableData(newData);
     }
 
     getTableValues(){
       let maxItems = 50;
       const tableState = this.props.tableState;
       let final = [];
-      let tableData = []
+      let tableData = [];
 
       if (this.props.tableState.filteredData.length !== 0){
         tableData = this.props.tableState.filteredData;
@@ -79,10 +120,10 @@ class Table extends Component{
       if (tableData.length - tableState.curPage * maxItems < maxItems) maxItems = tableData.length - tableState.curPage * maxItems;
 
       for (let i = tableState.curPage * 50; i < tableState.curPage * 50 + maxItems; i++){
-        final.push(<TableRow data = {tableData[i]} key = {i} index = {i}/>)
+        final.push(<TableRow data = {tableData[i]} key = {i} index = {i}/>);
       }
 
-      return final
+      return final;
     }
 
     render() {
@@ -192,30 +233,34 @@ class Table extends Component{
             <form className="table-form">
               <div className="input-field">
                 <label className="input-field__label" htmlFor="idInput">id</label>
-                <input className="input-field__input underline" id="idInput" name="idInput" type="num"/>
+                <input className="input-field__input underline" id="idInput" name="id" type="number" onChange={this.changeFormInputValue}/>
               </div>
 
               <div className="input-field">
                 <label className="input-field__label" htmlFor="firstNameInput">firstName</label>
-                <input className="input-field__input underline" id="firstNameInput" name="firstNameInput" type="text"/>
+                <input className="input-field__input underline" id="firstNameInput" name="firstName" type="text" onChange={this.changeFormInputValue}/>
               </div>
 
               <div className="input-field">
                 <label className="input-field__label" htmlFor="lastNameInput">lastName</label>
-                <input className="input-field__input underline" id="lastNameInput" name="lastNameInput" type="text"/>
+                <input className="input-field__input underline" id="lastNameInput" name="lastName" type="text" onChange={this.changeFormInputValue}/>
               </div>
 
               <div className="input-field">
                 <label className="input-field__label" htmlFor="emailInput">email</label>
-                <input className="input-field__input underline" id="emailInput" name="emailInput" type="email"/>
+                <input className="input-field__input underline" id="emailInput" name="email" type="email" onChange={this.changeFormInputValue}/>
               </div>
 
               <div className="input-field">
                 <label className="input-field__label" htmlFor="phoneInput">phone</label>
-                <input className="input-field__input underline" id="phoneInput" name="phoneInput" type="phone"/>
+                <input className="input-field__input underline" id="phoneInput" name="phone" type="phone" onChange={this.changeFormInputValue} />
               </div>
 
-              <button type="submit" className="form-submit-btn">Добавить</button>
+              <button type="submit" className="form-submit-btn" disabled={Object.values(this.props.tableState.dataForm).some(el => el === "")} onClick={this.addElementFormSubmit}>Добавить</button>
+
+              {this.props.tableState.formErrorInput ? (
+                <p className="form-error">В полях ввода допущена ошибка!</p>
+              ) : ('')}
             </form>) : ('')}
           </div>
         </div>
@@ -259,23 +304,35 @@ const mapDispatchToProps = (dispatch) =>{
     onColumnFilterStateToggle: (columnName) => {
         dispatch({type : 'COLUMN_FILTER_STATE_TOGGLE', payload:columnName})
     },
-    onSetMaxPages: () => {
-      dispatch({type : 'SET_MAX_PAGES', payload:null})
+    onSetMaxPages: (dataType) => {
+      dispatch({type : 'SET_MAX_PAGES', payload:dataType})
     },
     onCurPageNullify: () => {
       dispatch({type : 'NULLIFY_CURRENT_PAGE', payload:null})
     },
-    onSelectedElementNullify: () =>{
+    onSelectedElementNullify: () => {
       dispatch({type : 'NULLIFY_SELECTED_ELEMENT', payload:null})
     },
-    onChangeSearchInput: (value) =>{
+    onChangeSearchInput: (value) => {
       dispatch({type : 'CHANGE_SEARCH_INPUT', payload:value})
     },
-    onSearchDataNullify: () =>{
+    onSearchDataNullify: () => {
       dispatch({type : 'NULLIFY_SEARCH_DATA', payload:null})
     },
     onChangeFilteredData: (value) => {
       dispatch({type : 'CHANGE_FILTERED_DATA', payload:value})
+    },
+    onChangeFormInput: (value, inputName) => {
+      dispatch({type : 'CHANGE_FORM_INPUT', payload:{"value":value, "name":inputName}})
+    },
+    onFormErorrInput: () => {
+      dispatch({type : 'FORM_ERROR_INPUT', payload:null})
+    },
+    onFormErorrInputNullify: () => {
+      dispatch({type : 'FORM_ERROR_INPUT_NULLIFY', payload:null})
+    },
+    onAddFormInput:() => {
+      dispatch({type : 'ADD_FORM_INPUT', payload:null})
     }
   }
 }

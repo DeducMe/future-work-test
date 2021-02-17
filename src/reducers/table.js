@@ -4,12 +4,34 @@ const initialState = {
   selectedElementId: -1,
   searchValue:"",
   loaderActive:false,
+  formErrorInput:false,
   columnFilterState:{
     id:'decrease',
     firstName:'decrease',
     lastName:'decrease',
     email:'decrease',
     phone:'decrease',
+  },
+  dataForm:{
+    id:'',
+    firstName:'',
+    lastName:'',
+    email:'',
+    phone:''
+  },
+  bufDataObj:{
+    id:'',
+    firstName:'',
+    lastName:'',
+    email:'',
+    phone:'',
+    address:{
+      streetAddress:"",
+      city:"",
+      state:"",
+      zip:""
+    },
+    description:''
   },
   data:[],
   filteredData:[],
@@ -65,7 +87,8 @@ export default function userState(state = initialState, action){
       };
     }
     if (action.type === 'SET_MAX_PAGES'){
-      state.maxPages = Math.floor(state.data.length % 50 === 0 ? state.data.length / 50 - 1 : state.data.length / 50)
+      const data = action.payload
+      state.maxPages = Math.floor(state[data].length % 50 === 0 ? state[data].length / 50 - 1 : state[data].length / 50)
       return {
         ...state
       };
@@ -100,7 +123,7 @@ export default function userState(state = initialState, action){
       const initalColumnState = state.columnFilterState[columnName]
 
       Object.keys(state.columnFilterState).map(function(objectKey) {
-        state.columnFilterState[objectKey] = 'decrease';
+        return state.columnFilterState[objectKey] = 'decrease';
       });
 
       state.columnFilterState[columnName] = (initalColumnState === 'decrease' ? ('increase') : ('decrease'))
@@ -112,6 +135,32 @@ export default function userState(state = initialState, action){
       state.data = action.payload;
       state.data = Object.assign([], state.data, [...state.data]);
 
+      return {
+        ...state
+      };
+    }
+    if (action.type === 'CHANGE_FORM_INPUT'){
+      state.dataForm[action.payload.name] = action.payload.value;
+      return {
+        ...state
+      };
+    }
+    if (action.type === 'FORM_ERROR_INPUT'){
+      state.formErrorInput = true;
+      return {
+        ...state
+      };
+    }
+    if (action.type === 'FORM_ERROR_INPUT_NULLIFY'){
+      state.formErrorInput = false;
+      return {
+        ...state
+      };
+    }
+    
+    if (action.type === 'ADD_FORM_INPUT'){
+
+      state.data.unshift(Object.assign(state.bufDataObj, state.dataForm));
       return {
         ...state
       };
